@@ -33,7 +33,7 @@ geneticMath.run = function (init, res, range, ops, gen, pop, limit, parens) {
         //run a generation
         for (var j = 0; j < pop; j++) {
             lifeform = life((!i) ? {[init]:init,st:0} : history[i-1][j%((pop/2 +1) >> 0)]);
-            if (lifeform.ft <= limit && isFinite(gen)) {
+            if (lifeform.ft <= limit && !isFinite(gen)) {
                 //the UberMensch
                 //console.log(JSON.stringify(lifeform, null, 4));
                 //Document.body.innerHTML = JSON.stringify(lifeform, null, 4);
