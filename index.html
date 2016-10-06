@@ -1,0 +1,74 @@
+<script>
+var geneticMath = {};
+geneticMath.run = function (init, res, range, ops, gen, pop, limit, parens) {
+    var fit = function (val) {
+        return (val !== void(0)) ? Math.abs(res - val) : Infinity;
+    }
+    var life = function (par) {
+        var keys = Object.keys(ops),
+            op = keys[(Math.random() * keys.length) << 0],
+            num = range[(Math.random() * range.length) << 0],
+            obj = {},
+            lP = '',
+            rP = '';
+        if (par.ft !== void(0) && par.ft <= limit) {
+            if (Math.random()*2 >> 0) {
+                return par;
+            }
+        }
+        if (parens) {
+            lP = '(';
+            rP = ')';
+        }
+        obj[lP+Object.keys(par)[0]+op+num+rP] = ops[op](par[Object.keys(par)[0]], num);
+        obj.ft = fit(obj[lP+Object.keys(par)[0]+op+num+rP]);
+        obj.st = par.st+1;
+        return obj;
+    }
+    var history = [],
+        period = [],
+        lifeform = {};
+    if (gen === void(0)) gen = Infinity;
+    for (var i = 0; i < gen; i++) {
+        //run a generation
+        for (var j = 0; j < pop; j++) {
+            lifeform = life((!i) ? {[init]:init,st:0} : history[i-1][j%((pop/2 +1) >> 0)]);
+            if (lifeform.ft <= limit && isFinite(gen)) {
+                //the UberMensch
+                //console.log(JSON.stringify(lifeform, null, 4));
+                //Document.body.innerHTML = JSON.stringify(lifeform, null, 4);
+                ubermensh = lifeform;
+                return Infinity;
+            }
+            period.push(lifeform);
+
+        }
+        //sort a generation
+        period.sort(function(a,b) {return (a.ft > b.ft) ? 1 : ((b.ft > a.ft) ? -1 : 0)});
+        //console.log(period);
+        //store a generation
+        history.push(period);
+        //end a generation
+        period = [];
+        //if(!isFinite(gen)) console.log(i);
+    }
+    //print history
+    console.log(JSON.stringify(history, null, 4));
+    //
+}
+geneticMath.range = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+geneticMath.math = {
+        "+": function(a, b) {return a + b},
+        "-": function(a, b) {return a - b},
+        "*": function(a, b) {return a * b},
+        "/": function(a, b) {return (b) ? a/b : void(0)},
+    };
+geneticMath._run = function(init, res, gen, pop, limit, parens) {
+    this.run(init, res, this.range, this.math, gen, pop, limit, parens)
+}
+geneticMath._run_till = function(init, res, pop, limit, parens) {
+    if (limit === void(0)) limit = 100;
+    this.run(init, res, this.range, this.math, void(0), pop, limit, parens)
+}
+geneticMath._run(5, 3942, 10, 5);
+</script>
