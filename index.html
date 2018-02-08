@@ -1,10 +1,20 @@
 <script>
 var geneticMath = {};
-geneticMath.run = function (init, res, range, ops, gen, pop, limit, parens, verbose) {
-    var fit = function (val) {
+geneticMath.run = function (config) {
+    var init = config.init, 
+        res = config.res, 
+        range = config.range, 
+        ops = config.opts, 
+        gen = config.gen, 
+        pop = config.pop, 
+        limit = config.limit, 
+        parens = config.parens, 
+        verbose = config.verbose,
+        
+    fit = function (val) {
         return (val !== void(0)) ? Math.abs(res - val) : Infinity;
-    }
-    var life = function (par) {
+    },
+    life = function (par) {
         var keys = Object.keys(ops),
             op = keys[(Math.random() * keys.length) << 0],
             num = range[(Math.random() * range.length) << 0],
@@ -28,8 +38,8 @@ geneticMath.run = function (init, res, range, ops, gen, pop, limit, parens, verb
             console.log(JSON.stringify(par, null, 4));
         }
         return obj;
-    }
-    var history = [],
+    },
+        history = [],
         period = [],
         lifeform = {}
         k = 0;
@@ -84,9 +94,12 @@ geneticMath.math = {
         "*": function(a, b) {return a * b},
         "/": function(a, b) {return (b) ? a/b : void(0)},
     };
-geneticMath._run = function(init, res, gen, pop, limit, parens, verbose) {
-    if (verbose === void(0)) verbose = 1;
-    this.run(init, res, this.range, this.math, gen, pop, limit, parens, verbose)
+geneticMath._run = function(config) {
+    var sub = Object.assign({}, config);
+    if (sub.verbose === void(0)) sub.verbose = 1;
+    sub.range = this.range;
+    sub.ops = this.math;
+    this.run(sub);
 }
 geneticMath._run_till = function(init, res, pop, limit, parens) {
     if (limit === void(0)) limit = 100;
